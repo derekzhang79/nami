@@ -1,0 +1,24 @@
+<nav id="nav">
+    {include file="public/header"}
+    <div class="container">
+        <div class="row nav-list">
+            <p class="col-md-3 pull-left">纳米Max 2 大屏大电量</p>
+            <div class="col-sm-5 pull-right">
+                <a href="{:url('pc/details/index',array('id'=>$id,'type'=>'index'))}"  class="<?php echo setActiveByAction('index','cur')?>">概述</a>
+                <span>|</span>
+                <a href="{:url('pc/details/atlasPic',array('id'=>$id,'type'=>'atlasPic'))}" class="<?php echo setActiveByAction('atlasPic','cur')?>">图集</a>
+                <span>|</span>
+                <a href="{:url('pc/details/specs',array('id'=>$id,'type'=>'specs'))}" class="<?php echo setActiveByAction('specs','cur')?>">参数</a>
+                <!-- <span>|</span>
+                 <a href="#">F码通道</a>-->
+                <span>|</span>
+                <a href="#">用户评价</a>
+                <?php  $curCtrl = getAction(); ?>
+                {if $curCtrl  != 'detail'}
+                <span>|</span>
+                <a href="{:url('pc/details/detail',array('id'=>$id,'type'=>'detail'))}" class="nav-btn JS_aBtn <?php echo setActiveByAction('detail','cur')?>">立即购买</a>
+                {/if}
+            </div>
+        </div>
+    </div>
+</nav>

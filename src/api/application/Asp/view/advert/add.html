@@ -1,0 +1,15 @@
+{include file="public/header"}
+<h2>banner</h2>
+<form action="{:url('save')}" enctype="multipart/form-data" method="post">
+	
+	<div class="form-group">
+		<label for="">banner</label>
+		<input type="file"  name="banner_img">
+	</div>
+	
+	<div class="form-group">
+		<input type="submit" class="btn-success btn" value="保存">
+	</div>
+</form>
+
+{include file="public/footer"}

@@ -1,0 +1,30 @@
+<div class="head">
+        <div class="container">
+            <div class="head-logo">
+                <img src="__PUBLIC__static/images/milogo.png" href="__PUBLIC__pc/index/index">
+            </div>
+            <div class="head-title">
+                <h2>支付订单</h2>
+                <p>温馨提示：产品是否购买成功，以最终下单为准哦，请尽快结算</p>
+            </div>
+            <div class="head-uinfo">
+                <span>
+                    <a href="__PUBLIC__pc/personal/home">{$user_info['username']}</a>
+                    <ul class="user-menu" style="display:none;">
+                        <li><a>个人中心</a></li>
+                        <li><a>评价晒单</a></li>
+                        <li><a>我的喜欢</a></li>
+                        <li><a>纳米账户</a></li>
+                        <li><a>退出登录</a></li>
+                    </ul>
+                </span>
+                <span>|</span>
+                <a href="__PUBLIC__pc/personal/home">我的订单</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('.head-uinfo span a').mouseenter(function(){
+            $(this).style.display = 'block';
+        })
+    </script>

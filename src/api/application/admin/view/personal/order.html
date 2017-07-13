@@ -1,0 +1,41 @@
+{include file="public/header"}
+
+<h1>订单管理</h1>
+<table class="table">
+    <tr>
+        <th>订单ID</th>
+        <th>用户ID</th>
+        <th>订单编号</th>
+        <th>下单日期</th>
+        <th>商品价格</th>
+        <th>运费</th>
+        <th>总价格</th>
+        <th>收货人</th>
+        <th>电话号码</th>
+        <th>地址</th>
+        <th>订单状态</th>
+        <th>操作</th>
+    </tr>
+    {foreach $order_list as $list}
+    <tr>
+        <td>{$list.id}</td>
+        <td>{$list.user_id}</td>
+        <td>{$list.sn}</td>
+        <td>{$list.date}</td>
+        <td>{$list.goods_price}</td>
+        <td>{$list.carry_price}</td>
+        <td>{$list.total_price}</td>
+        <td>{$list.consignee}</td>
+        <td>{$list.phone_num}</td>
+        <td>{$list.address}</td>
+        <th>{$list.status}</th>
+        <td>
+            <a href='' class="btn btn-info">预览</a>
+            <a href='' class="btn btn-default">修改</a>
+            <a href="" class="btn btn-danger">删除</a>
+        </td>
+    </tr>
+    {/foreach}
+</table>
+
+{include file="public/footer"}

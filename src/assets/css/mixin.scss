@@ -1,0 +1,31 @@
+
+$fen_se: #f56869;
+$ora: #FF5722;
+$grey: #efeff4;
+
+@mixin divbtn ($width,$height,$size,$bgcolor,$color) {
+  width:$width;
+  height:$height;
+  font-size:$size;
+  color:$color;
+  display: inline-block;
+  padding:10px 0;
+  text-align:center;
+  text-decoration:none;
+  background-color:$bgcolor;
+}
+
+@mixin bgcolor ($bgcolor) {
+  background:$bgcolor;
+}
+
+.red_lg_btn{
+   margin-top:10px;
+  @include divbtn(100px,auto,20px,$fen_se,#fff)
+}
+.red_bg_btn{
+  @include divbtn(100%,auto,20px,$fen_se,#fff)
+}
+.ora_bg{
+  @include bgcolor($ora)
+}

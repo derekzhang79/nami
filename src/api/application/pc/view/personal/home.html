@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__static/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__static/css/home.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__static/css/hf.css">
+    <script type="text/javascript" src="__PUBLIC__static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__static/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <!-- header -->
+    {include file="public/header"}
+    <!-- page-main -->
+    <div class="page-main">
+        <div class="container">
+            <div class="home-left">
+                <div class="um-box">
+                    <div class="um-nav-box">
+                        <div class="nav-hd">
+                            <h3 class="title">订单中心</h3></div>
+                        <div class="nav-bd">
+                            <ul class="bd-list">
+                                <li class="selected" ><a>我的订单</a></li>
+             
+                                <li><a>团购订单</a></li>
+                                <li><a>评价晒单</a></li>
+                                <li><a>话费充值订单</a></li>
+                                <li><a>以旧换新订单</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="um-nav-box">
+                        <div class="nav-hd">
+                            <h3 class="title">个人中心</h3></div>
+                        <div class="nav-bd">
+                            <ul class="bd-list">
+                                <li><a >我的个人中心</a></li>
+                                <li><a >消息通知</a></li>
+                                <li><a >购买资格</a></li>
+                                <li><a >现金账户</a></li>
+                                <li><a >纳米礼品卡</a></li>
+                                <li><a >手机换新券</a></li>
+                                <li><a >喜欢的商品</a></li>
+                                <li><a >优惠券</a></li>
+                                <li><a >收货地址</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="um-nav-box">
+                        <div class="nav-hd">
+                            <h3 class="title">售后服务</h3></div>
+                        <div class="nav-bd">
+                            <ul class="bd-list">
+                                <li><a>服务记录</a></li>
+                                <li><a>申请服务</a></li>
+                                <li><a>领取快递报销</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="um-nav-box">
+                        <div class="nav-hd">
+                            <h3 class="title">账户管理</h3></div>
+                        <div class="nav-bd">
+                            <ul class="bd-list">
+                                <li><a>个人信息</a></li>
+                                <li><a>修改密码</a></li>
+                                <li><a>社区VIP认证</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="home-right">
+                <!-- 我的订单 -->
+                <div class="uc-home con-tip" id="my-order">
+                    <div class="uc-content-box">
+                        <div class="box-hd">
+                            <h1 class="title">我的订单</h1>
+                            <div class="more">
+                                <ul class="filter-list">
+                                    <li data-status="1" class="active"><a>全部有效订单</a></li>
+                                    <li data-status="2"><a>待支付<span>({$waitPayNum})</span></a></li>
+                                    <li data-status="3"><a>待收货<span>({$waitReceiveNum})</span></a></li>
+                                    <li data-status="4"><a>已关闭 <span>({$finishNum})</span></a></li>
+                                </ul>
+                                <formn class="search-form" method="">
+                                    <label class="hide" for="">站内搜索</label>
+                                    <input type="search" class="search-text" placeholder="输入商品名称、商品编号、订单号">
+                                    <input type="submit" class="search-btn iconfont" name="" value="&#xe601">
+                                    </form>
+                            </div>
+                        </div>
+                        <div class="box-bd">
+                            <ul class="order-list">
+                                {foreach $myOrderList as $list}
+                                <li class="uc-order-item">
+                                    <!--  -->
+                                    <div class="order-title">
+                                        <h4>
+                                        <?php
+                                            if($list['status']==0){
+                                                echo '待支付';
+                                            }else if($list['status']==1||$list['status']==2){
+                                                echo '待收货';
+                                            }else {
+                                                echo '已完成';
+                                            }
+                                        ?>
+                                        </h4>
+                                        <ul class="order-attr">
+                                            <li>
+                                            <?php
+                                                echo date('Y-m-d H:i',$list['date']);
+                                            ?>
+                                            &nbsp15:54&nbsp</li>
+                                            <li>{$list.consignee}&nbsp</li>
+                                            <li>订单号:<span>{$list.sn}</span></li>
+                                            <li>&nbsp在线支付</li>
+                                        </ul>
+                                        <div class="summary">订单金额：<span>{$list.total_price}元</span></div>
+                                    </div>
+                                    <div class="order-content">
+                                        <div>
+                                            <div class="order-content-img"><img src="__PUBLIC__static/images/xiaoNote2.jpg" ></div>
+                                            <div class="name">
+                                                <p>红米Note 4X 全网通版 香槟金 32GB</p>
+                                                <span>999元×1</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="order-content-img"><img src="__PUBLIC__static/images/xm6_320.jpg"></div>
+                                            <div class="name">
+                                                <p>红米Note 4X 全网通版 香槟金 32GB</p>
+                                                <span>999元×1</span>
+                                            </div>
+                                        </div>
+                                        <div class="order-next">
+                                            <button>立即支付</button>
+                                            <button>订单支付</button>
+                                        </div>
+                                    </div>
+                                </li>
+                                {/foreach}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- 个人中心 -->
+                <section class="bio-box con-tip hide" id="my-personal">
+                    <div class="bio-header">
+                        <div class="header-left">`
+                            <div class="left-pic">
+                                <img src="__PUBLIC__static/images/6qYwLL2xvAZT3B_320.jpg" alt="">
+                            </div>
+                            <div class="left-info">
+                                <h3 class="info-name">啊泽</h3>
+                                <span class="info-greet">早上好</span>
+                                <a href="#">修改个人信息></a>
+                            </div>
+                        </div>
+                        <div class="header-right">
+                            <p class="info-safety">账户安全：<span>普通</span></p>
+                            <p class="info-mobile">绑定手机：<span>18815151616</span></p>
+                            <p class="info-e">绑定邮箱：<span>123456789@qq.com</span></p>
+                        </div>
+                    </div>
+                    <ul class="bio-footer row">
+                        <li class="col-md-6">
+                            <img src="__PUBLIC__static/images/portal-icon-1.png" alt="">
+                            <div class="footer">
+                                <h4>待支付的订单：<span>0</span></h4>
+                                <a id="wait-pay" click=waitPay()>查看待支付订单></a>
+                            </div>
+                        </li>
+                        <li class="col-md-6">
+                            <img src="__PUBLIC__static/images/portal-icon-2.png" alt="">
+                            <div class="footer">
+                                <h4>待收货的订单：<span>0</span></h4>
+                                <a href="#">查看待收货订单></a>
+                            </div>
+                        </li>
+                        <li class="col-md-6">
+                            <img src="__PUBLIC__static/images/portal-icon-3.png" alt="">
+                            <div class="footer">
+                                <h4>待支付商品数：<span>0</span></h4>
+                                <a href="#">查看待评价商品></a>
+                            </div>
+                        </li>
+                        <li class="col-md-6">
+                            <img src="__PUBLIC__static/images/portal-icon-4.png" alt="">
+                            <div class="footer">
+                                <h4>喜欢的商品：<span>0</span></h4>
+                                <a href="#">查看喜欢的商品></a>
+                            </div>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </div>
+    <!-- footer -->
+    {include file="public/footer"}
+</body>
+<script type="text/javascript">
+    $(function(){
+        var $nav_li=$(".nav-bd ul.bd-list li:first-child");
+        $nav_li.click(function(){
+            $(this).addClass("selected")
+                .siblings().removeClass("selected");
+            var index = $nav_li.index(this);
+            $(".home-right .con-tip")
+                .eq(index).removeClass("hide")
+                .siblings().addClass("hide");
+        })
+
+        // .css({'background':'yellow'});
+       var $wait_pay = $('a#wait-pay');
+       $wait_pay.click(function(){
+           $('#my-order').removeClass("hide");
+           $('#my-personal').addClass("hide");               
+       })
+        
+    })
+
+    $('.filter-list li').click(function(){
+        $(this).addClass("active").siblings().removeClass("active");
+        $.get('__PUBLIC__pc/personal/payStatusAjax',{status:$(this).attr("data-status")},function(rtnD){
+            $('.box-bd').html(rtnD);
+        })
+    })
+    /*$('.filter-list li').click(function(){
+        var index = $('.filter-list li').index(this);
+        $(this).eq(index).addClass('active');
+        $(this).addClass("active").siblings().removeClass("active");
+    })*/
+</script>
+
+</html>

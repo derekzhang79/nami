@@ -1,0 +1,48 @@
+html,body,h1,h2,h3,h4,h5,h6,p,ul,li{
+	margin: 0;
+	padding: 0;
+	color:#333;
+}
+
+a{
+	text-decoration: none;
+	color:#333;
+	font-size:12px;
+}
+
+li{
+	list-style: none;
+}
+
+.carnav{
+height: 3rem;
+ background: #ff6700;
+}
+.carnav .mint-header-title{
+	color:#fff;
+}
+
+.fadeIn-enter-active{
+  transition: opacity .3s
+}
+.fadeIn-enter{
+    opacity: 0
+}
+
+
+.slide-fade-enter-active {
+  transform: translateX(0px);
+  transition: 0.5s;
+}
+.slide-fade-enter{
+  transform: translateX(360px);
+}
+.slide-fade-leave-active {
+  transform: translateX(360px);
+  transition: 0.2s;
+}
+.slide-fade-leave
+{
+  transform: translateX(0px);
+}
+

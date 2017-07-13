@@ -1,0 +1,196 @@
+{include file="public/header"}
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=SYF6kWV4w0ZC7kA3jaZoIvwPAg1kL15H"></script>
+
+<style type="text/css">
+	.dropify-wrapper{width:30% !important;float: left;margin-right: 10px;}
+	.attr_li li{list-style: none;margin-bottom: 10px;}
+	.attr_li li input{width: 50%}
+</style>
+
+<script src="https://cdn.bootcss.com/vue/2.3.0/vue.min.js"></script>
+<h2>添加商品表单</h2>
+<!-- 选项卡菜单：nav   nav-tabs -->
+<div>
+	<a href="{:url('index')}" class="btn btn-success">返回商品列表</a>
+</div>
+<br/>
+<ul class="nav nav-tabs">
+	<li class="active">
+		<a href="#baseInfo" data-toggle="tab">基本信息</a>
+	</li>
+	<li>
+		<a href="#attr"  data-toggle="tab">商品属性</a>
+	</li>
+</ul>
+<form action="{:url('save')}" enctype="multipart/form-data" method="post">
+	<div class="tab-content">
+		<!-- 基本信息选项卡的切换内容一 -->
+		<div class="tab-pane active" id="baseInfo">
+
+			<div class="form-group">
+				<label for="">商品名称</label>
+				<input type="text" class="form-control" name="goods_name"></div>
+			<div class="form-group">
+				<label for="">商品价格</label>
+				<input type="text" class="form-control" name="goods_price"></div>
+			<div class="form-group">
+				<label for="">所属分类</label>
+				<select name="cate_id" >
+					<option value="">请选择</option>
+					{foreach $category_list as $item}
+					<option value="{$item.id}">
+			         {$item.cate_name}
+					</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="form-group">
+				<div>
+					<label for="">商品预览</label>
+				</div>
+				<input type="file"  name="goods_image" class="thumb">
+				<input type="file"  name="pic_1" class="thumb">
+				<input type="file"  name="pic_2" class="thumb">
+				<input type="file"  name="pic_3" class="thumb">
+			</div>
+			<!-- <div class="form-group" style="clear:both">
+				<label for="">门票地图</label>
+				<input type="text" placeholder="请输入地址关键词" id="map_kwd">
+				<input onclick="search()" value="搜索" type="button" class="btn btn-info">
+				经度：
+				<input type="text" name="lng">
+				纬度：
+				<input type="text" name="lat">
+				<br>
+				<div id="allmap" style="width:100%;height:280px;"></div>
+
+				<script type="text/javascript">
+			// 百度地图API功能
+			var map = new BMap.Map("allmap");  //盒子的ID        
+			 
+				map.addControl(new BMap.NavigationControl());    
+				var point = new BMap.Point(113.243113,23.126342);
+
+				// 添加覆盖物
+	map.centerAndZoom(point, 12);
+	 
+
+		function showInfo(e){
+				$("input[name='lng']").val(e.point.lng);
+			$("input[name='lat']").val(e.point.lat);
+	}
+	map.addEventListener("click", showInfo);
+
+			// 搜索要用的
+			var local = new BMap.LocalSearch(map, {
+				renderOptions:{map: map}
+			});
+			function search () {
+			 	local.search($("#map_kwd").val());
+			}
+		</script>
+			</div> -->
+
+			<div class="form-group">
+				<label for="">商品简介</label>
+				<textarea name="goods_deta" id="description"  style="width: 100%; height: 190px;"></textarea>
+			</div>
+
+		</div>
+		<!-- 选项卡内容二 -->
+		<div  class="tab-pane admin-view row" id="attr">
+			<div id="damai_attr">
+				<div class="col-lg-6">
+					<div class="form-group">
+						<label >版本</label>
+						<ul class="attr_li">
+							<li v-for="(version,index) in version_input">
+								<input class="form-control" type="text" name="goods_info[]" v-model="goods_info[index]"></li>
+						</ul>
+						<a @click="addTimeInput()">+添加版本</a>
+					</div>
+					<div class="form-group">
+						<label >颜色</label>
+						<ul class="attr_li">
+							<li v-for="(color,index) in color_input">
+								<input class="form-control" type="text" name="goods_color[]" v-model="goods_color[index]"></li>
+						</ul>
+
+						<a @click="addPriceInput()">+添加颜色</a>
+					</div>
+				</div>
+				<div class="col-lg-6">
+
+					<div class="form-group">
+						<label >库存</label>
+						<ul>
+							<li v-for="(version,t_index) in goods_info">
+								{{ version }}
+								<input type="text" placeholder="请输入价格" :name="'price['+t_index+']'">
+								<ul>
+									<li v-for="(color,p_index) in goods_color">
+										{{ color }}
+										<input type="text" placeholder="请输入库存" :name="'sku['+t_index+']['+p_index+']'"></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="form-group">
+		<input type="submit" class="btn-success btn" value="保存"></div>
+
+</form>
+
+<link rel="stylesheet" type="text/css" href="__PUBLIC_ADMIN__/static/library/dropify/dropify.min.css">
+<script type="text/javascript" src="__PUBLIC_ADMIN__/static/library/dropify/dropify.min.js"></script>
+
+<script type="text/javascript" src="__PUBLIC_ADMIN__/static/library/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__PUBLIC_ADMIN__/static/library/ueditor/ueditor.all.min.js"></script>
+
+<script type="text/javascript">
+$(function  () {
+	new Vue({
+		el:".admin-view",
+		data:{
+			goods_info:[],//产品版本的数组
+			version_input:[0],//有多少个时间输入框
+			goods_color:[],//产品颜色的数组
+			color_input:[0,1]//有多少个颜色输入框
+		},
+		methods:{
+			addTimeInput(){
+				this.version_input.push(1)
+			},
+			addPriceInput(){
+				this.color_input.push(1)
+			}
+		}
+	})
+})
+    $('input[name="goods_image"]').dropify({
+    	 messages: {
+	        'default': '主图',
+	    }
+    });
+    $('input[name="pic_1"]').dropify({
+    	 messages: {
+	        'default': '副图一',
+	    }
+    });
+    $('input[name="pic_2"]').dropify({
+    	 messages: {
+	        'default': '副图二',
+	    }
+    });
+    $('input[name="pic_3"]').dropify({
+    	 messages: {
+	        'default': '副图三',
+	    }
+    });
+    // var ue = UE.getEditor('description');
+</script>
+{include file="public/footer"}

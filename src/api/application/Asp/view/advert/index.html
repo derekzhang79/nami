@@ -1,0 +1,24 @@
+{include file="public/header"}
+<h2>banner管理</h2>
+<a href="{:url('add')}" class="btn btn-success">添加banner</a>
+
+
+
+<table class="table">
+	<tr>
+		<th>ID</th>
+		<th>banner图片</th>
+		<th>操作</th>
+	</tr>
+
+
+	{foreach $advert_list as $item}
+	<tr>
+		<td>{$item.id}</td>
+		<td>{$item['banner_img']}</td>
+		<td><a href="{:url('delete')}" class="btn btn-success">删除</a></td>
+	</tr>
+	{/foreach}
+</table>
+
+{include file="public/footer"}

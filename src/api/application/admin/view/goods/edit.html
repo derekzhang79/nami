@@ -1,0 +1,114 @@
+{include file="public/header"}
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=SYF6kWV4w0ZC7kA3jaZoIvwPAg1kL15H"></script>
+<style type="text/css">
+	.dropify-wrapper{width:30% !important;float: left;margin-right: 10px;}
+</style>
+<h2>修改商品表单</h2>
+<div>
+	<a href="{:url('index')}" class="btn btn-success">返回商品列表</a>
+</div>
+<form action="{:url('update')}" enctype="multipart/form-data" method="post">
+	<div class="form-group">
+		<label for="">商品名称</label>
+		<input type="text" class="form-control" name="goods_name" value="{$info.goods_name}"></div>
+	<div class="form-group">
+		<label for="">商品价格</label>
+		<input type="text" class="form-control" name="goods_price" value="{$info.goods_price}"></div>
+	<div class="form-group">
+		<label for="">所属分类</label>
+		<select name="cate_id" >
+			<option value="">请选择</option>
+			{foreach $category_list as $item}
+			<option {if condition='$info.cate_id == $item.id'}selected {/if} value="{$item.id}">
+			{$item.cate_name}
+			</option>
+			{/foreach}
+		</select>
+	</div>
+	<div class="form-group" >
+		<div><label for="">商品图片</label></div>
+		<input type="file"  name="goods_image" class="thumb" data-default-file="__PUBLIC_ADMIN__{$info.goods_image}">
+		<input type="file"  name="pic_1" class="thumb" data-default-file="__PUBLIC_ADMIN__{$info.pic_1}">
+		<input type="file"  name="pic_2" class="thumb" data-default-file="__PUBLIC_ADMIN__{$info.pic_2}">
+        <input type="file"  name="pic_3" class="thumb" data-default-file="__PUBLIC_ADMIN__{$info.pic_3}">
+		</div>
+ 
+
+
+	<!-- <div class="form-group" style="clear:both">
+		<label for="">门票地图</label>
+		<input type="text" placeholder="请输入地址关键词" id="map_kwd">
+		<input onclick="search()" value="搜索" type="button" class="btn btn-info">
+		经度：
+		<input type="text" name="lng"  value="">
+		纬度：
+		<input type="text" name="lat" value="">
+		<br>
+		<div id="allmap" style="width:100%;height:280px;"></div>
+
+		<script type="text/javascript">
+			// 百度地图API功能
+			var map = new BMap.Map("allmap");  //盒子的ID        
+			 
+				map.addControl(new BMap.NavigationControl());    
+				var point = new BMap.Point(113.243113,23.126342);
+
+				// 添加覆盖物
+	map.centerAndZoom(point, 12);
+	 
+
+		function showInfo(e){
+				$("input[name='lng']").val(e.point.lng);
+			$("input[name='lat']").val(e.point.lat);
+	}
+	map.addEventListener("click", showInfo);
+
+			// 搜索要用的
+			var local = new BMap.LocalSearch(map, {
+				renderOptions:{map: map}
+			});
+			function search () {
+			 	local.search($("#map_kwd").val());
+			}
+		</script>
+	</div> -->
+
+	<div class="form-group">
+		<label for="">商品简介</label>
+		<textarea name="goods_deta" id="description"  style="width: 100%; height: 190px;">{$info.goods_deta}</textarea>
+	</div>
+	<div class="form-group">
+		<input type="hidden" name="id" value="{$info.id}">
+		<input type="submit" class="btn-success btn" value="更新"></div>
+</form>
+
+<link rel="stylesheet" type="text/css" href="__PUBLIC_ADMIN__/static/library/dropify/dropify.min.css">
+<script type="text/javascript" src="__PUBLIC_ADMIN__/static/library/dropify/dropify.min.js"></script>
+
+<script type="text/javascript" src="__PUBLIC_ADMIN__/static/library/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__PUBLIC_ADMIN__/static/library/ueditor/ueditor.all.min.js"></script>
+
+<script type="text/javascript">
+     $('input[name="goods_image"]').dropify({
+    	 messages: {
+	        'default': '主图',
+	    }
+    });
+    $('input[name="pic_1"]').dropify({
+    	 messages: {
+	        'default': '副图一',
+	    }
+    });
+    $('input[name="pic_2"]').dropify({
+    	 messages: {
+	        'default': '副图二',
+	    }
+    });
+    $('input[name="pic_3"]').dropify({
+    	 messages: {
+	        'default': '副图二',
+	    }
+    });
+    // var ue = UE.getEditor('description');
+</script>
+{include file="public/footer"}

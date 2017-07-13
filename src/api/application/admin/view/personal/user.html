@@ -1,0 +1,24 @@
+{include file="public/header"}
+<h1>用户管理</h1>
+<table class="table">
+    <tr>
+        <td>用户ID</td>
+        <th>用户名</th>
+        <th>用户密码(md5加密)</th>
+        <th>注册日期</th>
+        <th>操作</th>
+    </tr>
+    {foreach $user_list as $list}
+    <tr>
+        <td>{$list.id}</td>
+        <td>{$list.username}</td>
+        <td>{$list.password}</td>
+        <td>{$list.create_time}</td>
+        <td>
+            <a href='' class="btn btn-info">修改</a>
+            <a href="" class="btn btn-danger">删除</a>
+        </td>
+    </tr>
+    {/foreach}
+</table>
+{include file="public/footer"}

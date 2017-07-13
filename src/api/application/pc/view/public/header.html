@@ -1,0 +1,178 @@
+
+    <div class="header" id="header">
+        <div class="nav">
+            <div class="container">
+                <div class="left">
+                    <ul class="nav_left">
+                    <li><a href="__PUBLIC__pc/index/index">纳米商城</li>
+                    <li><a href="javascript:;">MIUI</li>
+                    <li><a href="javascript:;">米聊</li>
+                    <li><a href="javascript:;">游戏</li>
+                    <li><a href="javascript:;">多看阅读</li>
+                    <li><a href="javascript:;">云服务</li>
+                    <li><a href="javascript:;">金融</li>
+                    <li><a href="javascript:;">纳米商城移动版</li>
+                    <li><a href="javascript:;">问题反馈</li>
+                    <li><a href="javascript:;">Select Region</li>
+                </ul>
+            </div>
+           <?php
+            if(emty($user_id)){
+                echo " <div class="right" id="sign-out">
+                <div class="left">
+                    <!-- 登录之前显示 -->
+                    <div class="left login">
+                        <a href="__PUBLIC__pc/personal/login">登录</a>
+                        <a href="__PUBLIC__pc/personal/register">注册</a>
+                        <a href="javascript:;">消息通知</a>
+                </div>
+            </div>";
+            }
+           ?>
+           
+            <div class="right">
+                <a href="__PUBLIC__pc/order/cart">
+                    <i class="iconfont">&#xe626;</i>购物车<span>(
+                    <?php
+                        if(empty($user_id)){
+                            echo '0';
+                        }
+                        echo $carNum;
+                    ?>
+                    )</span>
+                </a>
+            </div>
+            <!-- 登录之后显示 -->
+            <?php
+                if($user_id){
+                    echo '<div class="left">
+                <ul class="customer">
+                    <li class="customer_show">
+                        <a href="javascript:;">{$userData['username']}</a>
+                    </li>
+                    <li><a href="javascript:;">消息通知</a></li>
+                    <li><a href="__PUBLIC__pc/personal/home">我的订单</a></li>
+                </ul>
+                <!-- 登录后账户下拉信息框 -->
+                <ul class="customer_detail text_center">
+                    <li><a href="__PUBLIC__pc/personal/home">个人中心</a></li>
+                    <li><a href="javascript:;">评价晒单</a></li>
+                    <li><a href="javascript:;">我的喜欢</a></li>
+                    <li><a href="__PUBLIC__pc/personal/home">纳米账户</a></li>
+                    <li><a href="__PUBLIC__pc/personal/login">退出登录</a></li>
+                </ul>
+            </div>';
+                }
+            ?>
+            
+        </div>
+    </div>
+    </div>
+    <div class="container product" id="title">
+        <div class="left pro_img">
+            <a href="__PUBLIC__pc/index/index">
+                <img src="__PUBLIC__static/images/headfoot/logo.png">
+                <img src="__PUBLIC__static/images/headfoot/yyymix.gif">
+            </a>
+        </div>
+        <div class="left">
+            <!-- 产品区域 -->
+            <div class="pro_left">
+                <ul>
+                    <li><span class="text">纳米手机</span></li>
+                    <li><span class="text">红米</span></li>
+                    <li><span class="text">平板笔记本</span></li>
+                    <li><span class="text">电视</span></li>
+                    <li><span class="text">盒子影音</span></li>
+                    <li><span class="text">路由器</span></li>
+                    <li><span class="text">智能硬件</span></li>
+                    <li><span class="text">服务</span></li>
+                    <li><span class="text">社区</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="right">
+            <!-- 搜索区域 -->
+            <div class="search">
+                <form role="form">
+                    <input type="search" class="search-text">
+                    <input type="submit" value="&#xe601;" class="iconfont search-btn">
+                    <!-- 搜索文本的遮罩div -->
+                    <div class="search-text search_hot_text">
+                        <a href="javascript:;">红米4X 699元起</a>
+                        <a href="javascript:;">笔记本</a>
+                    </div>
+                    <div class="iconfont icon-sousuo_sousuo search-btn btn"></div>
+                </form>
+                <!-- 纳米热卖产品下拉div -->
+                <div class="key_word">
+                    <ul class="search_keyword">
+                        <!-- <li>
+                            <a href="javascript:;">
+                                <span class="key_word_text">纳米6</span>
+                                <span class="pro_piece right">约有7件</span>
+                            </a>
+                        </li> -->
+                        <!-- <li>
+                            <a href="javascript:;">
+                                <span class="key_word_text">纳米6</span>
+                                <span class="pro_piece right">约有7件</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <span class="key_word_text">纳米6</span>
+                                <span class="pro_piece right">约有7件</span>
+                            </a>
+                        </li> -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  产品详细下拉框   -->
+    <div class="container" id="login-nav">
+        <div class="container pro_detailed" style="width: 100% !important;">
+        <ul class="pro_detailed_ul">
+            <!-- <li class="text_center">
+                <span class="text_box">新品</span>
+                <img src="images/xm6_320.png" alt="">
+                <p>纳米6</p>
+                <span class="text_color">2499元起</span>
+            </li>
+            <li class="text_center">
+                <span class="text_box">新品</span>
+                <img src="images/xm6_320.png" alt="">
+                <p>纳米6</p>
+                <span class="text_color">2499元起</span>
+            </li>
+            <li class="text_center">
+                <span class="text_box">新品</span>
+                <img src="images/xm6_320.png" alt="">
+                <p>纳米6</p>
+                <span class="text_color">2499元起</span>
+            </li>
+            <li class="text_center">
+                <span class="text_box">新品</span>
+                <img src="images/xm6_320.png" alt="">
+                <p>纳米6</p>
+                <span class="text_color">2499元起</span>
+            </li>
+            <li class="text_center">
+                <span class="text_box">新品</span>
+                <img src="images/xm6_320.png" alt="">
+                <p>纳米6</p>
+                <span class="text_color">2499元起</span>
+            </li>
+            <li class="text_center">
+                <span class="text_box">新品</span>
+                <img src="images/xm6_320.png" alt="">
+                <p>纳米6</p>
+                <span class="text_color">2499元起</span>
+            </li> -->
+        </ul>
+    </div>
+    </div>
+    
+    </div>
+    

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>详情页面</title>
+    <link rel="stylesheet" href="__PUBLIC__static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__PUBLIC__static/css/animate.css">
+    <link rel="stylesheet" href="__PUBLIC__static/css/detail.css">
+    <link rel="stylesheet" href="__PUBLIC__static/css/hf.css">
+    <script type="text/javascript" src="__PUBLIC__static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__static/js/vue.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__static/js/ueditor.config.js"></script>
+    <script type="text/javascript" src="__PUBLIC__static/js/index.js"></script>
+    <script type="text/javascript" src="__PUBLIC__static/js/addjs.js"></script>
+</head>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=SYF6kWV4w0ZC7kA3jaZoIvwPAg1kL15H"></script>
+
+<body>
+<style type="text/css">
+	.dropify-wrapper{width:30% !important;float: left;margin-right: 10px;}
+	.attr_li li{list-style: none;margin-bottom: 10px;}
+	.attr_li li input{width: 50%}
+</style>
+
+<script type="text/javascript" src="__PUBLIC__static/js/vue.min.js"></script>
+<h2>添加商品表单</h2>
+<!-- 选项卡菜单：nav   nav-tabs -->
+<ul class="nav nav-tabs">
+	<li class="active">
+		<a href="#baseInfo" data-toggle="tab">基本信息</a>
+	</li>
+	<li>
+		<a href="#attr"  data-toggle="tab">商品属性</a>
+	</li>
+</ul>
+<form action="{:url('save')}" enctype="multipart/form-data" method="post">
+	<div class="tab-content">
+		<!-- 基本信息选项卡的切换内容一 -->
+		<div class="tab-pane active" id="baseInfo">
+
+			<div class="form-group">
+				<label for="">商品名称</label>
+				<input type="text" class="form-control" name="goods_name"></div>
+			<div class="form-group">
+				<label for="">商品价格</label>
+				<input type="text" class="form-control" name="goods_price"></div>
+			<div class="form-group">
+				<label for="">开始时间</label>
+				<input type="text" class="form-control" name="star_time"></div>
+			<div class="form-group">
+				<label for="">所属分类</label>
+				<select name="cate_id" >
+					<option value="">请选择</option>
+					{foreach $category_list as $item}
+					<option value="{$item.id}">
+						{if condition="$item['parent_id'] > 0 "}
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			
+			{/if}
+			{$item.cate_name}
+					</option>
+					{/foreach}
+				</select>
+			</div>
+			<div class="form-group">
+				<div>
+					<label for="">商品图片</label>
+				</div>
+				<input type="file"  name="goods_thumb" class="thumb">
+				<input type="file"  name="thumb_1" class="thumb">
+				<input type="file"  name="thumb_2" class="thumb"></div>
+			<div class="form-group" style="clear:both">
+				<label for="">门票地图</label>
+				<input type="text" placeholder="请输入地址关键词" id="map_kwd">
+				<input onclick="search()" value="搜索" type="button" class="btn btn-info">
+				经度：
+				<input type="text" name="lng">
+				纬度：
+				<input type="text" name="lat">
+				<br>
+				<div id="allmap" style="width:100%;height:280px;"></div>
+
+				<script type="text/javascript">
+			// 百度地图API功能
+			var map = new BMap.Map("allmap");  //盒子的ID        
+			 
+				map.addControl(new BMap.NavigationControl());    
+				var point = new BMap.Point(113.243113,23.126342);
+
+				// 添加覆盖物
+	map.centerAndZoom(point, 12);
+	 
+
+		function showInfo(e){
+				$("input[name='lng']").val(e.point.lng);
+			$("input[name='lat']").val(e.point.lat);
+	}
+	map.addEventListener("click", showInfo);
+
+			// 搜索要用的
+			var local = new BMap.LocalSearch(map, {
+				renderOptions:{map: map}
+			});
+			function search () {
+			 	local.search($("#map_kwd").val());
+			}
+		</script>
+			</div>
+
+			<div class="form-group">
+				<label for="">商品简介</label>
+				<textarea name="description" id="description"  style="width: 100%; height: 190px;"></textarea>
+				<a onclick="setContent(1)">插入模版1</a>
+				<a onclick="setContent(2)">插入模版2</a>
+			</div>
+
+		</div>
+		<!-- 选项卡内容二 -->
+		<div  class="tab-pane admin-view row" id="attr">
+			<div class="container">
+				<label >
+					<input checked="" @click="chose_type(1)" type="radio" name="goods_type" value="1">大麦</label>
+				<label >
+					<input @click="chose_type(2)" type="radio" name="goods_type" value="2">纳米</label>
+			</div>
+			<!-- v-show   display none block 两个盒子是存在html节点 -->
+			<!-- v-if   只要为true的节点才存在html节点 -->
+			<div id="damai_attr" v-if="chose_type_val==1">
+				<div class="col-lg-6">
+					<div class="form-group">
+						<label >演出时间</label>
+						<ul class="attr_li">
+							<li v-for="(input,index) in time_input">
+								<input class="form-control" type="text" name="star_time[]" v-model="star_time[index]"></li>
+						</ul>
+						<a @click="addTimeInput()">+添加时间</a>
+					</div>
+					<div class="form-group">
+						<label >价格</label>
+						<ul class="attr_li">
+							<li v-for="(price,index) in price_input">
+								<input class="form-control" type="text" name="star_price[]" v-model="star_price[index]"></li>
+						</ul>
+
+						<a @click="addPriceInput()">+添加价格</a>
+					</div>
+				</div>
+				<div class="col-lg-6">
+
+					<div class="form-group">
+						<label >库存</label>
+						<ul>
+							<li v-for="(time,t_index) in star_time">
+								{{ time }}
+								<ul>
+									<li v-for="(price,p_index) in star_price">
+										{{ price }}
+										<input type="text" :name="'sku['+t_index+']['+p_index+']'"></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- 纳米属性盒子 -->
+			<div id="xmi_attr" v-if="chose_type_val==2">
+				<div class="col-lg-6">
+					<div class="form-group">
+						<label >
+							<input type="text" placeholder="请输入规格一" name="diy_name[]"></label>
+						<ul class="attr_li">
+							<li v-for="(input,index) in time_input">
+								<input class="form-control" type="text" name="star_time[]" v-model="star_time[index]"></li>
+						</ul>
+						<a @click="addTimeInput()">+添加值</a>
+					</div>
+					<div class="form-group">
+						<label >
+							<input type="text"  placeholder="请输入规格二" name="diy_name[]"></label>
+						<ul class="attr_li">
+							<li v-for="(price,index) in price_input">
+								<input class="form-control" type="text" name="star_price[]" v-model="star_price[index]"></li>
+						</ul>
+
+						<a @click="addPriceInput()">+添加值</a>
+					</div>
+				</div>
+				<div class="col-lg-6">
+
+					<div class="form-group">
+						<label >库存</label>
+						<ul>
+							<li v-for="(time,t_index) in star_time">
+								{{ time }}
+								<ul>
+									<li v-for="(price,p_index) in star_price">
+										{{ price }}
+										<input type="text" placeholder="请输入库存" :name="'sku['+t_index+']['+p_index+']'">
+										<input type="text" placeholder="请输入价格" :name="'price['+t_index+']['+p_index+']'"></li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="form-group">
+		<input type="submit" class="btn-success btn" value="保存"></div>
+
+</form>
+
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/static/dropify.min.css">
+<script type="text/javascript" src="__PUBLIC__/static/library/dropify/dropify.min.js"></script>
+
+<!-- 引入配置文件 -->
+<script type="text/javascript" src="__PUBLIC__/static/library/ueditor/ueditor.config.js"></script>
+<!-- 核心文件 -->
+<script type="text/javascript" src="__PUBLIC__/static/library/ueditor/ueditor.all.min.js"></script>
+
+
+
+<script type="text/javascript">
+$(function  () {
+	new Vue({
+		el:".admin-view",
+		data:{
+			star_time:[],//演唱时间的数组
+			time_input:[0],//有多少个时间输入框
+			star_price:[],//演唱价格的数组
+			price_input:[0,1],//有多少个价格输入框
+			chose_type_val:1,//控制具体显示哪一个属性盒子
+		},
+		methods:{
+			addTimeInput(){
+				this.time_input.push(1)
+			},
+			addPriceInput(){
+				this.price_input.push(1)
+			},
+			chose_type(type){
+				this.chose_type_val=type
+			}
+		}
+	})
+})
+    $('input[name="goods_thumb"]').dropify({
+    	 messages: {
+	        'default': '主图',
+	    }
+    });
+    $('input[name="thumb_1"]').dropify({
+    	 messages: {
+	        'default': '副图一',
+	    }
+    });
+    $('input[name="thumb_2"]').dropify({
+    	 messages: {
+	        'default': '副图二',
+	    }
+    });
+    var ue = UE.getEditor('description');
+
+    function setContent (theme_type) {
+    	// 使用ue对象调用setContent方法，
+    	// 第一个参数：模版内容
+    	// 第二个参数：是否替换之前内容，true：不替换；默认为false即替换
+    	var theme_1=`
+<link rel="stylesheet" type="text/css" href="https://s01.mifile.cn/css/product/mi5splus/index.min.css?d14afd">
+    	<div class="mi5sp-home mi5sp-bd">
+    <!--section-top-->
+    <div class="section section-top is-visible preload">
+        <div class="h-slider">
+            <div class="ui-wrapper" style="max-width: 100%; margin: 0px auto;"><div class="ui-viewport" style="width: 100%; overflow: hidden; position: relative; height: 1120px;"><div class="xm-slider js-slider2" data-stat-title="焦点图轮播" style="width: auto; position: relative;">
+                <div class="slide slide1" style="float: none; list-style: outside none none; position: absolute; width: 1349px; z-index: 50; display: block;">
+                    <div class="inner1">
+                        <p class="desc webfont">5.7"大屏双摄手机，拍照黑科技 </p>
+                        <p class="price"><strong>2299</strong>元起</p>
+                    </div>
+                </div>
+                <div class="slide slide2" style="float: none; list-style: outside none none; position: absolute; width: 1349px; z-index: 0; display: none;">
+                    <div class="inner2">
+                        <p class="desc webfont">5.7"大屏双摄手机，拍照黑科技 </p>
+                        <p class="price"><strong>2299</strong>元起</p>
+                    </div>
+                </div>
+            </div></div></div>
+        </div>
+    </div>
+
+    <div class="section section-photo preload is-visible">
+        <div class="img-ani-con">
+            <div class="J_movePic img pepole  move-pic" data-move="100" style="transform: translateY(-3.6436px);"></div>
+        </div>
+    </div>
+
+
+    <!--section1-->
+    <div class="section section1 preload">
+        <div class="container">
+            <h2 class="tit webfont">5.7"大屏舒适握感<br> 轻薄金属机身，正面 2.5D 玻璃</h2>
+            <div class="desc">
+                纳米5s Plus 屏幕很大，却大的恰到好处。 正面2.5D 玻璃下是 5.7 英寸高色饱屏幕。背部采用 3D <br>
+                金属材质，弧形收边设计更贴合手掌。当你收发信息、拍照、或是浏览网页时，单手轻松持握。
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--section2-->
+    <div class="section section2">
+        <div class="container">
+            <h2 class="tit webfont">双 13MP 高画质相机<br> 照片细腻, 理所当然</h2>
+            <div class="desc">
+                如何让手机拍照画质更好？那就是一部手机，两个相机。纳米5s Plus 拥有两个 1300 万像素相机：彩色<br>相机采集色彩，黑白相机记录明暗细节。当开启双摄模式后，两个相机同时工作，既保留了彩色相机的丰<br>富色彩，还拥有了黑白相机纯净的画质，让你的作品细节更多、画质也更细腻了。
+            </div>
+            <div class="text clearfix">
+                <div class="fl h-t">
+                    1300万像素<br> 彩色感光元件
+                </div>
+                <div class="fr h-t">
+                    1300万像素<br> 黑白感光元件
+                </div>
+            </div>
+            <!-- <div class="img2 "></div> -->
+        </div>
+    </div>
+
+    <div class="section section-photo">
+        <div class="img-ani-con">
+            <div class="J_movePic img move-pic gold" data-move="100"></div>
+        </div>
+    </div>
+
+    <!--section3-->
+    <div class="section section3">
+        <div class="img1"></div>
+        <div class="container">
+            <h2 class="tit webfont">双影像处理器<br>
+                更细腻的背后，更多的黑科技</h2>
+            <div class="desc">
+                为每个相机配备独立影像处理器，这就是纳米5s Plus 拍照背后的黑科技。不仅将两个相机拍摄的照片合<br>二为一提升画质。还如同一位出色的设计师，为你的每张照片进行优化，例如调整曝光、对比度、饱和度<br>等，让你轻松获得一张叹为观止的大作。
+            </div>
+            <ul class="feature-list clearfix">
+                <li class="fist">
+                    <i class="icons icon1"></i>
+                    减少噪点
+                </li>
+                <li>
+                    <i class="icons icon2"></i>
+                    暗光增强
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!--section4-->
+    <div class="section section4">
+        <div class="ani-con clearfix">
+            <div class="ani-item ani-item1"></div>
+            <div class="ani-item ani-item2"></div>
+            <div class="ani-item3"></div>
+        </div>
+
+        <div class="drag-con">
+            <div class="slider-l J_sliderItem J_item J_barL" style="width: 674.5px;">
+                <div class="img" style="left: 674.5px;"></div>
+            </div>
+            <div class="slider-r J_item J_barR" style="width: 674.5px;">
+                <div class="img" style="right: -605.5px;"></div>
+            </div>
+            <div class="slider-bar J_bar" style="left: 674.5px;"></div>
+        </div>
+    </div>
+
+    <!--section5-->
+    <div class="section section5">
+        <div class="container">
+            <h2 class="tit webfont">专业黑白相机<br>
+                2 倍感光度，画面更纯粹</h2>
+            <div class="desc">
+                用纳米5s Plus 黑白相机拍照，绝不是加一个黑白滤镜这么简单，它是一个真正的黑白相机。<br>拥有媲美黑
+                白胶片相机的效果，画面纯粹而真实。同时多达约 2 倍的感光度，<br>让相机接收的光线更多了，这意味着你
+                的照片画面更明亮，层次感也更强。
+            </div>
+           <!--  <div class="h-slider">
+                <div  class="xm-slider js-slider1" data-stat-title="焦点图轮播">
+                    <div class="slide optimize-slide1"></div>
+                    <div class="slide optimize-slide2"></div>
+                    <div class="slide optimize-slide3"></div>
+                    <div class="slide optimize-slide4"></div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <div class="section section-photo">
+        <div class="img-ani-con">
+            <div class="J_movePic img move-pic pink" data-move="100"></div>
+        </div>
+    </div>
+
+    <!--section6-->
+    <div class="section section6">
+        <div class="container">
+            <h2 class="tit webfont">高性能绝配<br> 骁龙 821 高配版与 6GB 大内存</h2>
+            <div class="desc">
+                迄今为止最快的纳米手机——纳米5s Plus，跑分高达 164119 分，它的强大性能源自骁龙 821 旗舰处理器和 6GB 超大内存，<br>
+                更不用说还有 128GB 高速闪存，无论是加载游戏、打开应用，或是浏览图库，纳米5s Plus 让你的每一个操作都快上加快。
+            </div>
+            <ul class="h-list clearfix">
+                <li class="first">
+                    <p>2.35GHz</p>
+                    最高主频
+                </li>
+                <li>
+                    <p>Adreno 530</p>
+                    图形处理器
+                </li>
+                <li>
+                    <p>4G+ 网络</p>
+                    3 x CA
+                </li>
+                <li class="first">
+                    <p>6GB + 128GB</p>
+                    内存 + 闪存
+                </li>
+                <li>
+                    <p>NFC</p>
+                    全功能NFC
+                </li>
+                <li>
+                    <p>快充 3.0</p>
+                    新一代快充技术
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section section-body">
+        <div class="container">
+            <div class="content">
+                <h2 class="tit webfont">一种金属，两种质感</h2>
+                <div class="desc">
+                    为进一步提升金属的魅力，我们赋予它两种气质。<br>你可以选择时尚优雅的高光拉丝版，也可以选择简<br>约大气亚光磨砂版，它们款款出色。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section section-rose">
+        <div class="container">
+            <div class="content">
+                <h2 class="tit webfont">时尚玫瑰金</h2>
+                <div class="desc">
+                    不同于其他颜色，色调柔和迷人的玫瑰金色，全新演绎金属的温婉雅致，无论你是干练的职场精英，亦或是个性十足的时尚潮人，优雅的玫瑰金色版一定让你爱不释手。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section section-screen">
+        <div class="container">
+            <div class="content">
+                <h2 class="tit webfont">5.7" 高色饱屏幕</h2>
+                <div class="desc">
+                    优秀的屏幕体验，背后是众多黑科技。高达 94% NTSC 色域，相比一般手机 ，画面表现更通透、<br>
+                    艳丽，不论是观看照片、视频，惊艳的屏幕表现，让你的每一次使用都赞不绝口。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--section8-->
+    <div class="section section8">
+        <div class="container">
+            <h2 class="tit webfont">全新 MIUI 8 系统黑科技</h2>
+            <div class="desc">
+                如果你热爱探索新事物，你一定会喜欢 MIUI 8 系统黑科技革新。不论是全功能 NFC 让手机<br>
+                变成你的公交卡、银行卡，或是隐私双系统将重要的信息分开存储，都是从每个人的生活<br>
+                出发，便利生活同时还能享受黑科技带来的乐趣。
+            </div>
+            <a class="href-link" href="//www.miui.com/zt/miui8/index.html" target="_blank" data-stat-id="fbfb152c68ebbc70" onclick="_msq.push(['trackEvent', '2e5079618f00fb09-fbfb152c68ebbc70', '//www.miui.com/zt/miui8/index.html', 'pcpid', '']);">查看更多系统黑科技&gt;</a>
+
+            <div class="img img2"></div>
+        </div>
+
+    </div>
+
+    <!--section9-->
+    <div class="section section9">
+        <div class="container">
+            <h2 class="tit webfont">
+                现在就选一部专属于你的<br>
+                纳米手机5s Plus
+            </h2>
+
+            <ul class="clearfix">
+                <li class="first">
+                    <p>
+                        标准版<br>
+                        4GB 内存 + 64GB 闪存
+                    </p>
+                    <span class="price">2299元</span>
+                </li>
+                <li>
+                    <p>
+                        高配版<br>6GB 内存 + 128GB 闪存</p>
+                    <span class="price">2599元</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section section-next">
+        <div class="container">
+            <a href="/mi5splus/gallery/" data-stat-id="e04e5ae4ae3b39b6" onclick="_msq.push(['trackEvent', '2e5079618f00fb09-e04e5ae4ae3b39b6', '/mi5splus/gallery/', 'pcpid', '']);">纳米5s Plus 精彩图集 &gt;</a>
+        </div>
+    </div>
+    <div id="footnote" class="section-footnote ">
+        <div class="container">
+            <div class="content">
+                <p class="footnote-list">本页面的数据来源于：多达约 2 倍感光度：相较于同像素彩色相机，黑白相机感光度较彩色相机增加约 2 倍；最快的纳米手机：最快仅指纳米系列手机；最大容量可选 6GB+128GB：另可选 4GB+64GB 版本；164119分：跑分数据来自纳米实验室，实际情况会因测试软件版本、具体测试环境、纳米5s Plus具体版本不同，而略有差异；
+NFC支持绑定公交卡、银行卡：初期出厂批次手机中并未包含，预计将于2016年11-12月期间MIUI稳定版会陆续推送升级。具体情况会因为技术条件、城市等有所差异，最终以MIUI系统升级提示为准。
+NFC 不是一个功能，而是一种通讯技术，叫做：近距离无线通讯技术。近距离无线通讯技术支持三种工作模式：1、卡模式（又叫卡模拟）；2、点对点模式（又叫P2P：近距离数据传输）；3、读写卡。以上这三种工作模式，纳米5s plus的近距离无线通讯技术全部支持。而近距离无线通讯技术，并非100%支持市面上所有常见卡种，或任何情况下的数据传输。具体使用情况最终 根据卡的种类、版本、发行时间、数据传输所处环境以及距离而定。 卡模拟功能，有基于eSE的和基于NFC-SIM的两种产品方案，而纳米5s plus的近距离无线通讯技术支持eSE卡模拟解决方案。原因是NFC-SIM 为运营商设计的NFC卡模拟解决方案，这种方案在用户体验上不佳，使用人群较少。为保证用户体验更佳和降低用户学习使用成本，所以纳米手机的卡模拟解决方案选择eSE方案。NFC 绑定使用银行卡、NFC充值公交卡、NFC绑定刷公交卡：具体使用情况及问题，详情可见纳米钱包网站：https://www.mipay.com；
+页面中所对比的一般手机，均为纳米自有手机。以上数据实际情况会因测试软件版本、具体测试环境、具体版本不同，而略有差异。 </p>
+            </div>
+        </div>
+    </div>
+    <div class="section-footer-common-erweima">
+	<div class="container">
+		<div class="common-erweima-content clearfix">
+			<div class="common-erweima-pic"><img src="//c1.mifile.cn/f/i/17/qrcode/miphone-erweima.png"></div>
+			<div class="common-erweima-context">
+				<div class="tips">扫码关注【<span>纳米手机</span>】公众号</div>
+				<div>新品、福利一手掌握，还有新人红包等你拿！</div>
+			</div>
+		</div>
+	</div>
+</div>
+</div>`;
+
+var  theme_2=`<link rel="stylesheet" type="text/css" href="https://s01.mifile.cn/css/product/redmi4x/index.min.css?01facb">
+<div class="redmi4x">
+        <div class="section redmi4x-banner is-visible preload">
+            <div class="container">
+                <div class="text">
+                    <h1 class="title title-font">红米4X 超长续航 </h1>
+                    <p class="title-info">4100mAh 超长续航* / 5" 舒适单手握感 /  骁龙 8 核处理器</p>
+                    <p class="price">699<span>元起</span></p>
+                </div>
+            </div>
+        </div>
+        <div class="section redmi4x-xuhang preload is-visible">
+            <div class="text">
+                <h3 class="title title-font">18天待机！长续航再升级</h3>
+                <p class="title-info">手机的功能越来越花哨，我们却越来越重视核心使用体验：续航与握感。从设计之初考虑续航体验，在 4100mAh 大电量的基础上达到 18 天待机、2天重度使用的惊人时间。基于 5" 绝佳单手尺寸上继续优化握感，让机身曲线更加圆润。配备高通 8 核处理器，3 种时尚配色。如果你想要一部性能流畅、续航持久、手感绝佳且拥有时尚外观的手机，红米4X 值得推荐。</p>
+            </div>
+        </div>
+        <div class="section redmi4x-icon4 preload">
+            <p>
+                <span>超长续航</span>
+                <span>5" 舒适握感</span>
+                <span>金属机身</span>
+                <span>8核处理器</span>
+            </p>
+        </div>
+        <div class="section redmi4x-battery">
+            <div class="container">
+                <div class="text">
+                    <h3 class="title title-font">4100mAh 大电量 </h3>
+                    <p class="title-info">对于红米用户最为称道的，是它的超长续航，然而对于设计者来说，它却是我们的出发点。每一个细节都必须在意，环环相扣：如果没有对机身分毫必较的设计，就没有更大的电池空间。如果没有大电量安全电池的研发，就不能兼备纤薄与大电量。如果没有深度系统级优化，就没有点滴提升的续航时间。4100mAh 的数字本就惊人，让我们骄傲的却是长续航给你便利的使用体验。</p>
+                </div>
+                <div class="img"></div>
+            </div>
+        </div>
+        <div class="section redmi4x-color">
+            <div class="tab-content-wrap" id="J_bgTabWrap">
+                <div class="content content1 active"></div>
+                <div class="content content2"></div>
+                <div class="content content3"></div>
+            </div>
+            <div class="container">
+                <div class="text">
+                    <h3 class="title title-font">多彩金属</h3>
+                    <p class="title-info">喜欢多彩的视觉，也爱金属的触感？那就为红米4X 的金属机身，赋予精心挑选的色彩吧。诗意樱花粉、淡雅香槟金、简约磨砂黑，为了这些颜色在金属材质准确呈现，红米沿用高端机型的阳极氧化工艺，同时使用钻石切割精密加工，为机身背部勾勒了两条明快的高光亮边，一种材质，两种视觉。</p>
+                    <div class="tab-nav-wrap" id="J_bgTabNav">
+                        <dl class="gold active">
+                            <dd><span></span></dd>
+                            <dt>香槟金</dt>
+                        </dl>
+                        <dl class="pink">
+                            <dd><span></span></dd>
+                            <dt>樱花粉</dt>
+                        </dl>
+                        <dl class="black">
+                            <dd><span></span></dd>
+                            <dt>磨砂黑</dt>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section redmi4x-shushi">
+            <div class="container">
+                <div class="text">
+                    <h3 class="title title-font">舒适握感</h3>
+                    <p class="title-info">大屏手机时代，为何还有无数人偏爱 5" 屏手机？正因如此绝佳握感，很难在其它尺寸实现。仅有这一经典尺寸提升握感还远远不够，在红米4X 上设计师再进行了多项改进。</p>
+                    <br>
+                    <p class="title-info">例如，为了贴合手掌，我们改进了金属塑形工艺，提升侧腰弧形曲度。为了持久握持的舒适感，手机四角更加圆润，操作屏幕最远端时，也不觉得硌手。采用高端机型常用的 2.5D 玻璃，使用时手感更加流畅。</p>
+                    <div class="program">
+                        <dl class="first">
+                            <dd>5”</dd>
+                            <dt>屏幕</dt>
+                        </dl>
+                        <dl>
+                            <dd>2.5D</dd>
+                            <dt>玻璃</dt>
+                        </dl>
+                    </div>
+                </div>
+                <div class="img"></div>
+            </div>
+        </div>
+        <div class="section redmi4x-slider1">
+            <div class="ui-wrapper" style="max-width: 100%;"><div class="ui-viewport" style="width: 100%; overflow: hidden; position: relative; height: 650px;"><div class="sliderbox" id="J_slider1" style="width: 615%; position: relative; transition-duration: 0s; transform: translate3d(-1349px, 0px, 0px);"><div class="slider slider4 ui-clone" style="float: left; list-style: outside none none; position: relative; width: 1349px;">
+                    <div class="left">
+                        <div class="text">
+                            <h3 class="title title-font">金属质感</h3>
+                            <p class="title-info">细腻的砂材经过千万次的猛烈撞击，均匀的附着在金属机身表面，带来细腻、顺滑的触感，配合弧形收边设计，让手感更近一步。</p>
+                        </div>
+                    </div>
+                    <div class="right"></div>
+                </div>
+                <div class="slider slider1" style="float: left; list-style: outside none none; position: relative; width: 1349px;">
+                    <div class="left">
+                        <div class="text">
+                            <h3 class="title title-font">2.5D 玻璃</h3>
+                            <p class="title-info">屏幕正面采用 2.5D玻璃，不再有直角边框带来的划手感，取而代之的是，微弧的屏幕边缘带来的更为柔和、顺滑的手感。</p>
+                        </div>
+                    </div>
+                    <div class="right"></div>
+                </div>
+                <div class="slider slider2" style="float: left; list-style: outside none none; position: relative; width: 1349px;">
+                    <div class="left">
+                        <div class="text">
+                            <h3 class="title title-font">机身圆角</h3>
+                            <p class="title-info">单手操作手机时，手机底部圆角紧密接触掌心，为此我们将机身四角设计的更为圆润，即使长时间使用手机阅读也非常舒适，操作屏幕远处也不硌手。</p>
+                        </div>
+                    </div>
+                    <div class="right"></div>
+                </div>
+                <div class="slider slider3" style="float: left; list-style: outside none none; position: relative; width: 1349px;">
+                    <div class="left">
+                        <div class="text">
+                            <h3 class="title title-font">弧形收边 </h3>
+                            <p class="title-info">每一次使用红米4X，你都能感受到弧形收边带来的舒适握感，自然弧度让手机更加贴合手掌，长时间握持依然舒适。</p>
+                        </div>
+                    </div>
+                    <div class="right"></div>
+                </div>
+                <div class="slider slider4" style="float: left; list-style: outside none none; position: relative; width: 1349px;">
+                    <div class="left">
+                        <div class="text">
+                            <h3 class="title title-font">金属质感</h3>
+                            <p class="title-info">细腻的砂材经过千万次的猛烈撞击，均匀的附着在金属机身表面，带来细腻、顺滑的触感，配合弧形收边设计，让手感更近一步。</p>
+                        </div>
+                    </div>
+                    <div class="right"></div>
+                </div>
+            <div class="slider slider1 ui-clone" style="float: left; list-style: outside none none; position: relative; width: 1349px;">
+                    <div class="left">
+                        <div class="text">
+                            <h3 class="title title-font">2.5D 玻璃</h3>
+                            <p class="title-info">屏幕正面采用 2.5D玻璃，不再有直角边框带来的划手感，取而代之的是，微弧的屏幕边缘带来的更为柔和、顺滑的手感。</p>
+                        </div>
+                    </div>
+                    <div class="right"></div>
+                </div></div></div><div class="ui-controls ui-has-pager ui-has-controls-direction"><div class="ui-pager ui-default-pager"><div class="ui-pager-item"><a href="" data-slide-index="0" class="ui-pager-link active">1</a></div><div class="ui-pager-item"><a href="" data-slide-index="1" class="ui-pager-link">2</a></div><div class="ui-pager-item"><a href="" data-slide-index="2" class="ui-pager-link">3</a></div><div class="ui-pager-item"><a href="" data-slide-index="3" class="ui-pager-link">4</a></div></div><div class="ui-controls-direction"><a class="ui-prev" href="" data-stat-id="76844b8f89037755" onclick="_msq.push(['trackEvent', '0dcd559d8f345534-76844b8f89037755', '', 'pcpid', '']);">上一张</a><a class="ui-next" href="" data-stat-id="2f67a19a4f208791" onclick="_msq.push(['trackEvent', '0dcd559d8f345534-2f67a19a4f208791', '', 'pcpid', '']);">下一张</a></div></div></div>
+        </div>
+        <div class="section redmi4x-he8">
+            <div class="container">
+                <div class="text">
+                    <h3 class="title title-font">8 核性能</h3>
+                    <p class="title-info">流畅的使用体验，更长的续航时间，是我们追求的目标。 <br>红米4X 采用高通骁龙 8 核处理器，相比上一代，性能更强却功耗更低，对于爱玩游戏的你，打游戏快了，画面也更流畅。</p>
+                </div>
+                <video class="video J_video" preload="none" loop="">
+                    <source src="//c1.mifile.cn/f/i/17/redminote4x/video/game.mp4" type="video/mp4">
+                    <source src="//c1.mifile.cn/f/i/17/redminote4x/video/game.webm" type="video/webm">
+                </video>
+            </div>
+        </div>
+        <div class="section redmi4x-fingerprint">
+            <div class="container">
+                <div class="text">
+                    <h3 class="title title-font">指纹识别</h3>
+                    <p class="title-info">最好的解锁方式，是免密码解锁。 <br>红米4X 配备指纹识别功能，无需重复输入解锁密码，指尖轻触就 <br>能瞬间解锁。不仅能解锁手机，还能指纹自拍、购物支付*、 <br>进入私密空间或查看私密文件等，更加安全便捷。</p>
+                    <div class="img"></div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="section redmi4x-slider2">
+            <div class="text">
+                <h3 class="title">高画质相机</h3>
+                <p class="title-info">同样1300万像素相机，拍照效果却大大不同。红米4X 采用高品质的感光元件和镜头，让你的作品拥有超高画质，还有0.3秒相位对焦，让照片清晰不虚，以及多种拍照功能。例如，你可以用全景从左到右记录创作一幅超长大作，也可以用夜景防抖功能轻松拍摄夜景等。拍风景很赞，自拍更赞！36级实时美颜自拍，取景时实时显示美颜效果。</p>
+            </div>
+            <div class="sliderbox" id="J_slider2">
+                <div class="slider slider1"></div>
+                <div class="slider slider2"></div>
+                <div class="slider slider3"></div>
+                <div class="slider slider4"></div>
+            </div>
+        </div> -->
+        <div class="section redmi4x-camera">
+            <div class="text">
+                <h3 class="title title-font">高画质相机</h3>
+                <p class="title-info">同样1300万像素相机，拍照效果却大大不同。红米4X 采用高品质的感光元件和镜头，让你的作品拥有超高画质，还有0.3秒相位对焦，让照片清晰不虚，以及多种拍照功能。例如，你可以用全景从左到右记录创作一幅超长大作，也可以用夜景防抖功能轻松拍摄夜景等。拍风景很赞，自拍更赞！36级实时美颜自拍，取景时实时显示美颜效果。</p>
+            </div>
+
+        </div>
+        <div class="section redmi4x-fn">
+            <div class="container">
+                <h3 class="title mar title-font textalignCenter">深受好评的功能已标配</h3>
+                <ul class="clear">
+                    <li class="img1"></li>
+                    <li>
+                        <div class="text mt70">
+                            <h3 class="title mb10 title-font">锁屏画报</h3>
+                            <p class="title-info">被朋友们称赞锁屏壁纸高大上，是怎样一种心情？ <br>红米4X 内置锁屏画报应用，提供《男人装》、《时 <br>尚芭莎》、《华夏地理》、路透社、美联社等图文 <br>画报。每次点亮手机，都是一次享受，新鲜潮流的 <br>时尚资讯、超高清精美图片，带给你前所未有的愉 <br>悦感。</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="text ">
+                            <h3 class="title mb10 title-font">隐私双系统</h3>
+                            <p class="title-info">如果有朋友喜欢你手中的红米4X，想解锁详细了 <br>解怎么办？现在，你可以大方告诉朋友密码，让朋 <br>友解锁备用系统，两个系统相互独立，信息不共 <br>享，不会泄露财产、隐私、个人等信息，让你的手 <br>机更安全。</p>
+                        </div>
+                    </li>
+                    <li class="img2"></li>
+                    <li class="img3"></li>
+                    <li>
+                        <div class="text mt140">
+                            <h3 class="title mb10 title-font">两个微信号都在线</h3>
+                            <p class="title-info">红米4X 支持应用双开功能，微信、QQ，甚至游戏 <br>都可以双开。</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="text ">
+                            <h3 class="title mb10 title-font">万能遥控器</h3>
+                            <p class="title-info">内置红外装置，一个手机就能遥控 电视、机顶盒、 <br>空调、风扇、DVD、单反等 11类设备。如果你想换 <br>个电视节目，你可以通过它预览电视节目服务，方 <br>便的找到并切换为想看的那个节目*。</p>
+                        </div>
+                    </li>
+                    <li class="img4"></li>
+                    <li class="img5"></li>
+                    <li>
+                        <div class="text mt90">
+                            <h3 class="title mb10 title-font">防诈骗短信</h3>
+                            <p class="title-info">诈骗者通过“伪基站”常常伪装成官方号码发送诈 <br>骗信息，中奖、更新密码等短信难辨真假，防不胜 <br>防。系统通过伪基站短信识别、短信钓鱼网址风险 <br>提示、浏览器网址检测三重保护防止伪基站短信诈 <br>骗，让你更加安全。</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="section redmi4x-sale">
+            <div class="text">
+                <h3 class="title title-font">3 年销量 1.1 亿台，红米国民手机</h3>
+                <p class="title-info">平易近人的新科技、大众喜爱的设计、超预期的使用体验，让红米系列手机广受好评，3年累计销量 1.1 亿台，让更多人享受到了移动互联的乐趣。它是可靠、可信赖的高品质国民手机。</p>
+                <!-- <a class="J_videoBtn btn" href="javascript:;" data-title="3年销量 1.1 亿，红米国民手机" data-src="//v.mifile.cn/b2c-mimall-media/310a9d4e91c199fbc14004468af46c98.mp4"></a> -->
+            </div>
+        </div>
+        <div class="section redmi4x-config">
+            <div class="text">
+                <h3 class="title title-font">红米4X 超长续航的国民手机</h3>
+            </div>
+            <div class="top">
+                <div class="tab-content-wrap" id="J_colorTabWrap">
+                    <div class="img1 active"></div>
+                    <div class="img2"></div>
+                    <div class="img3"></div>
+                </div>
+                <ul class="tab-nav-wrap clear" id="J_colorTabNav">
+                    <li class="per-nav per-nav1 active">
+                        <div class="cirle"><div class="bg"></div></div>
+                        <span>樱花粉</span>
+                    </li>
+                    <li class="per-nav per-nav2">
+                        <div class="cirle"><div class="bg"></div></div>
+                        <span>香槟金</span>
+                    </li>
+                    <li class="per-nav per-nav3">
+                        <div class="cirle"><div class="bg"></div></div>
+                        <span>磨砂黑</span>
+                    </li>
+                </ul>
+            </div>
+            <ul class="bottom">
+                <li>
+                    <p class="title">18 天待机</p>
+                    <p class="title-info">4100mAh 大电量</p>
+                </li>
+                <li>
+                    <p class="title">8核处理器</p>
+                    <p class="title-info">高通骁龙435处理器</p>
+                </li>
+                <li>
+                    <p class="title">5"屏舒适握感</p>
+                    <p class="title-info">单手握持经典尺寸</p>
+                </li>
+                <li>
+                    <p class="title">高画质相机</p>
+                    <p class="title-info">1300万像素后置相机</p>
+                </li>
+                <li class="last">
+                    <p class="title">指纹识别</p>
+                    <p class="title-info">支持解锁、支付</p>
+                </li>
+            </ul>
+        </div>
+        <div class="section redmi4x-tomore">
+            <div class="container">
+                <div class="img"></div>
+                <a class="more-btn" href="//www.mi.com/redminote4x/" target="_blank" data-stat-id="0eed05b576aede38" onclick="_msq.push(['trackEvent', '0dcd559d8f345534-0eed05b576aede38', '//www.mi.com/redminote4x/', 'pcpid', '']);">还有5.5" 多彩金属红米Note 4X &gt;</a>
+            </div>
+        </div>
+        <div class="section redmi4x-remark">
+            <p class="remark-info">注释：购物支付指通过纳米钱包购物支付。4G+ 相比 4G 网络理论下行速度提升 1 倍。4100mAh 为typ值。续航数据为我司实验室数据，亮屏亮度为87，每次测试需要将手机充满电，执行测试任务，一直到手机没电为止，记录持续时长，通过电流计算得出的理论数据。红外功能需设备支持红外遥控。 </p>
+        </div>
+        <div class="section-footer-common-erweima">
+	<div class="container">
+		<div class="common-erweima-content clearfix">
+			<div class="common-erweima-pic"><img src="//c1.mifile.cn/f/i/17/qrcode/redmi-erweima.png"></div>
+			<div class="common-erweima-context">
+				<div class="tips">扫码关注【<span>红米手机</span>】公众号</div>
+				<div>新品、福利先人一步，还有新人红包等你拿！</div>
+			</div>
+		</div>
+	</div>
+</div>
+    </div>`;
+    if (theme_type==1) {
+    	 ue.setContent(theme_1);
+    }else if(theme_type==2) {
+    	ue.setContent(theme_2);
+    }
+    	 
+    }
+
+    $(function () {
+    var proChoosetwo= $(".page02 .page02-info .main .pro-choose-two ul li");
+
+   proChoosetwo.click( function () { $(this).addClass("active").siblings().removeClass("active");
+
+   });
+
+
+    var proChooseAlone=$(".page02 .page02-info .main .pro-choose-alone ul li")
+    proChooseAlone.click( function () {
+
+            if($(this).hasClass("active") == false){
+
+                $(this).addClass("active")
+            }else {
+
+               $(this).removeClass("active");
+
+            }
+        });
+
+    /*参数页面*/
+    var Select=$(".Js_select p a");
+    var Js_selectContent=$(".Js_selectContent");
+    var JS_Show=$(".Js_selectContent a");
+
+    Select.click(function () {
+
+        Js_selectContent.show();
+    })
+
+    JS_Show.click(function () {
+        Js_selectContent.hide();
+    })
+
+    /*nav隐藏 滚动一定距离隐藏*/
+    $('#title,#login-nav').hide();
+    $('#header').css({"height":"42px"});
+    var winHeight = $(document).scrollTop();
+    $(window).scroll(function(){
+        var scrollY =$(document).scrollTop();
+        if(scrollY > 50){
+            $('#header').slideUp(500);
+        }else {
+            $('#header').slideDown(500);
+        }
+
+    })
+
+
+});
+
+</script>
+<!--
+{include file="public/footer"}-->
+</body>
+</html>
