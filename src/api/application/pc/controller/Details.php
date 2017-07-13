@@ -18,10 +18,7 @@ class Details extends \think\Controller
         return $this->fetch("index");
     }
     public function detail()
-    {   
-        $user_info = Session::get('user_info');
-        $this->assign('user_info',$user_info);
-        
+    {           
         //header基本信息
         $this->navInfo(); 
         //echo empty($user); 
@@ -35,10 +32,10 @@ class Details extends \think\Controller
 
         $id = input('id');
 
-
         $goods_attr =db('goods_attr')->where("goods_id=$id")->select();
 
         $detail_info=db('detail_format')->where("id=$id")->find();
+        
         foreach($goods_attr as $key => $value){
             $goods_color = db('color')->where("attr_id",$value['id'])->select();
             $goods_attr[$key]['goods_color'] = $goods_color;
@@ -46,10 +43,11 @@ class Details extends \think\Controller
         $detail_info['goods_attr'] = $goods_attr;
         //$detail_info['goods_color'] = $goods_color;  
 
-        //局域网图片添加  显示需拼接地址 __IMAGE__ (在config配置)
-        // $detail_info['goods_image'] =  '__IMAGE__'.$detail_info['goods_image'];
+        //局域网图片添加  显示需拼接地址 __IMAGE__ (在config配置)在界面渲染时会替换。
+        $detail_info['goods_image'] =  '__IMAGE__'.$detail_info['goods_image'];
         $this->assign('detail_info',json_encode($detail_info)); 
-        // print_r($detail_info);
+        /*print_r($detail_info);
+        exit();*/
         $detail_list=array(
         'cmbProvince' => input('cmbProvince'),
         'cmbCity'=>input('cmbCity'),
@@ -99,11 +97,11 @@ class Details extends \think\Controller
     public function navInfo()
     {
         $userData=Session::get('user_info');
-        $this->assign('userData',$userData);
         // print_r($user);
         //echo $user['username'];
         if (Session::get('user_id')) {
             $user_id=Session::get('user_id');
+            $this->assign('user_id',$user_id);
             //待支付数量
             $cartList= db('cart')->where("user_id=$user_id")->select();
             $this->assign('cartList',$cartList);
@@ -115,6 +113,10 @@ class Details extends \think\Controller
             
             $this->assign('cartNum',$cartNum);
             // print_r($cartNum);
+        }else {
+
         }
+        $this->assign('userData',$userData);
+        
     }
 }

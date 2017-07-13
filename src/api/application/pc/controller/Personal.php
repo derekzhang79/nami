@@ -45,14 +45,13 @@ class Personal extends \think\Controller
         if (Session::get('user_id')) {
 
             $user_id = Session::get('user_id');
-            
             $myOrderList = db('order')->where("user_id=$user_id")->select();
 
             // $myOrderData= json_encode($myOrderList);
             $this->assign('myOrderList',$myOrderList);
             
             //待支付数量
-            $waitPayList= db('order')->where(array('user_id'=>$user_id,'status'=>'0'))->select();
+            $waitPayList= db('order')->where("user_id= $user_id and status = 0")->select();
             $this->assign('waitPayList',$waitPayList);
             $waitPayNum = 0;
             foreach ($waitPayList as $key => $value) {
@@ -155,9 +154,10 @@ class Personal extends \think\Controller
     //我的订单待支付API
     public function payStatusAjax(){
         $status=input('status');
+        $user_id = Session::get('user_id');
         $where_sql= '' ;
         if($status== 2){
-           $where_sql= 'status = 0 ' ;
+           $where_sql= 'status = 0' ;
         }else if($status ==3){
             $where_sql= 'status =1 or status =2' ;
         }else if($status==4){
@@ -165,20 +165,21 @@ class Personal extends \think\Controller
         }else {
             $where_sql = '';
         }
-        $payStatusList= db('order')->where($where_sql)->select();
+        $payStatusList= db('order')->where($where_sql)->where("user_id = $user_id")->select();
         $this->assign('payStatusList',$payStatusList);
 
         return view('ajax');
     }
 
+    //封装函数 nav-header相关
     public function navInfo()
     {
         $userData=Session::get('user_info');
-        $this->assign('userData',$userData);
         // print_r($user);
-        //echo $user['username'];
+        // echo $userData['username'];
         if (Session::get('user_id')) {
             $user_id=Session::get('user_id');
+            $this->assign('user_id',$user_id);
             //待支付数量
             $cartList= db('cart')->where("user_id=$user_id")->select();
             $this->assign('cartList',$cartList);
@@ -189,6 +190,10 @@ class Personal extends \think\Controller
             }
             
             $this->assign('cartNum',$cartNum);
+        }else{
+
         }
+        $this->assign('userData',$userData);
+
     }
 }

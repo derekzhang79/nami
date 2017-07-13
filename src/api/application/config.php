@@ -226,7 +226,9 @@ return [
         '__PC_PUBLIC__'         => '/public/static/pc/',
         '__ROOT__'              => '../../../',
         //PC
-        '__PUBLIC__'            =>'/nami/src/api/public/',
+        '__PUBLIC__'            => '/nami/src/api/public/',
+        //PC显示图片
+        '__IMAGE__'             => 'http://localhost/nami/src/api/public/'
     ],
 /*'view_replace_str'       => [
         '__PUBLIC__'         => '/webPrj/xiaomi/src/api/public',

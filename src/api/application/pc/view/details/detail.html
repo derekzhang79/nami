@@ -14,14 +14,13 @@
     <link rel="stylesheet" href="__PUBLIC__static/css/detail.css">
     <link rel="stylesheet" href="__PUBLIC__static/css/hf.css">
     <script type="text/javascript" src="__PUBLIC__static/js/jquery.min.js"></script>
-    <!-- <script type="text/javascript" src="__PUBLIC__static/js/jquery.min2.js"></script> -->
     <script type="text/javascript" src="__PUBLIC__static/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__static/js/vue.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__static/js/ueditor.config.js"></script>
     <script type="text/javascript" src="__PUBLIC__static/js/index.js"></script>
     <script type="text/javascript" src="__PUBLIC__static/js/addjs.js"></script>
     <script type="text/javascript" src="__PUBLIC__static/js/axios.min.js"></script>
-    <script type="text/javascript" src="__PUBLIC__static/js/detail.js"></script>
+    <!-- <script type="text/javascript" src="__PUBLIC__static/js/detail.js"></script> -->
 </head>
 <body>
 
@@ -98,7 +97,7 @@
                     <div class="pro-choose pro-choose-col2 J_step pro-choose-two">
                         <h2 class="step-title">选择颜色</h2>
                         <ul class="step-list row clearfix select">
-                            <li class="btn col-md-6 btn-biglarge (active.index)" v-for="(BgGoods,index) in version.goods_color" @click="BgGoodss(index)">
+                            <li class="btn col-md-6 btn-biglarge (active.index)" id="color" v-for="(BgGoods,index) in version.goods_color" @click="BgGoodss(index)">
                                 <a>
                                     {{BgGoods.goods_color}}
                                 </a>
@@ -243,8 +242,8 @@ addressInit('cmbProvince', 'cmbCity', 'cmbArea');
                 insurePrice:'',   //点击选中的价格
                 cmbProvince:'', 
                 goods_id:{$id},   //url中的产品id 
-                click:false ,    //判断选中属性//session传过来的user
-                user:{$user},
+                click:false ,    //判断选中属性
+                user:{$user},   //session传过来的user
                 detail_info:{$detail_info},
 
                 insure_data:[
@@ -288,12 +287,15 @@ addressInit('cmbProvince', 'cmbCity', 'cmbArea');
                     
                     // console.log(this.goods_id);
                     // return false;
-                    if (this.user==null) {
+                    
+                    if (this.user=='null') {
+                         console.log(this.user);
+                    // return false;
                         window.location.href = "__PUBLIC__pc/personal/login";
+
                     }else {
                         
-                    }
-                    if (this.price!=""&&this.BgGoods!="") {                       
+                        if (this.price!=""&&this.BgGoods!="") {                       
                         let buyList = {};
                         buyList.user_id=this.user.id;
                         buyList.goods_id= this.goods_id;
@@ -323,6 +325,9 @@ addressInit('cmbProvince', 'cmbCity', 'cmbArea');
                         return false;
                     }
 
+                    }
+                    
+
                 
                 
                 }
@@ -335,10 +340,11 @@ addressInit('cmbProvince', 'cmbCity', 'cmbArea');
     $(function () {
     var proChoosetwo= $(".page02 .page02-info .main .pro-choose-two ul li");
 
-   proChoosetwo.click( function () { $(this).addClass("active").siblings().removeClass("active");
+    proChoosetwo.click( function () { 
 
-   });
+        $(this).addClass("active").siblings().removeClass("active");
 
+    });
 
     var proChooseAlone=$(".page02 .page02-info .main .pro-choose-alone ul li")
     proChooseAlone.click( function () {

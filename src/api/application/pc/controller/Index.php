@@ -43,10 +43,14 @@ class Index extends \think\Controller
             }
             
             $this->assign('cartNum',$cartNum);
+            // print_r($userData);
+            // echo $userData['username'];
+            // exit();
         }else {
 
         }
         $this->assign('userData',$userData);
+
     }
     
 }
