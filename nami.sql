@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50714
 File Encoding         : 65001
 
-Date: 2017-07-14 02:53:09
+Date: 2017-07-17 07:11:17
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -47,7 +47,7 @@ CREATE TABLE `xm_cart` (
   `goods_price` decimal(11,0) DEFAULT NULL,
   `goods_attr1` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=139 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=140 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of xm_cart
@@ -61,6 +61,7 @@ INSERT INTO `xm_cart` VALUES ('49', '1', '1', null, '小米6', '2', '樱花粉',
 INSERT INTO `xm_cart` VALUES ('54', '3', '1', null, '小米6', '1', '亮蓝色', null, '2899', '全网通版6GB+128GB');
 INSERT INTO `xm_cart` VALUES ('136', '2', '2', 'http://localhost/nami/src/api/public//uploads/20170707\\1f66e93b2fde37fd16a84950775d55a0.jpg', '纳米note2', '1', '冰川银', null, '2799', '64GB');
 INSERT INTO `xm_cart` VALUES ('138', '16', '6', 'http://localhost/nami/src/api/public//uploads/20170707\\f879108c13fa0492391d810c6b954109.png', '纳米音响', '3', '灰色', null, '1999', '主机');
+INSERT INTO `xm_cart` VALUES ('139', '16', '1', 'http://localhost/nami/src/api/public//uploads/20170707\\4626699d8456bb1a3315715245b0a6ce.png', '纳米 MAX2', '1', '亮黑色', null, '2899', '全网通版6GB+128GB');
 INSERT INTO `xm_cart` VALUES ('135', '2', '14', 'http://localhost/nami/src/api/public//uploads/20170713\\a04530dc9955689b3eddd5299307b0b3.jpg', '小米笔记本Air 12.5英寸', '2', '金色', null, '3549', '12.5英寸 M3 4G 128G');
 
 -- ----------------------------
@@ -220,8 +221,8 @@ CREATE TABLE `xm_detail_format` (
 -- ----------------------------
 -- Records of xm_detail_format
 -- ----------------------------
-INSERT INTO `xm_detail_format` VALUES ('1', '15', '/uploads/20170707\\4626699d8456bb1a3315715245b0a6ce.png', '/uploads/20170707\\99b64c2ece476a569181297927166d9f.jpg', '/uploads/20170707\\2fec9e11f06b5ad2f6717522e82daeb5.jpg', '/uploads/20170707\\2cf0064beee4dbc48460e2a8c1c175a6.png', '纳米 MAX2', '5.7\" 双曲面柔性屏 / 3D曲面玻璃 / 骁龙 821 性能版 / 2256万超高像素相机 / 4070mAh 超长续航', '2999', '');
-INSERT INTO `xm_detail_format` VALUES ('2', '34', '/uploads/20170707\\1f66e93b2fde37fd16a84950775d55a0.jpg', '/uploads/20170707\\b1591e9265dcea9d5128a95b4cf42e74.jpg', '/uploads/20170707\\600e8ee0eb23b27a07f752115b142329.png', '/uploads/20170707\\25ff5d573a2549f7e0039f705d28cb62.jpg', '纳米note2', '平板电脑/电脑XUV5.7\" 双曲面柔性屏 / 3D曲面玻璃 / 骁龙 821 性能版 / 2256万超高像素相机 / 4070mAh 超长续航', '3999', '');
+INSERT INTO `xm_detail_format` VALUES ('1', '15', '/uploads/20170707\\4626699d8456bb1a3315715245b0a6ce.png', '/uploads/20170707\\99b64c2ece476a569181297927166d9f.jpg', '/uploads/20170707\\2fec9e11f06b5ad2f6717522e82daeb5.jpg', '/uploads/20170707\\2cf0064beee4dbc48460e2a8c1c175a6.png', '纳米 MAX2', '6.44\'\'大屏 / 5300mAh 充电宝级的大电量 / 大像素相机 / 轻薄全金属 / ​4GB 大内存 / 骁龙八核处理器', '2999', '');
+INSERT INTO `xm_detail_format` VALUES ('2', '34', '/uploads/20170707\\1f66e93b2fde37fd16a84950775d55a0.jpg', '/uploads/20170707\\b1591e9265dcea9d5128a95b4cf42e74.jpg', '/uploads/20170707\\600e8ee0eb23b27a07f752115b142329.png', '/uploads/20170707\\25ff5d573a2549f7e0039f705d28cb62.jpg', '纳米note2', '5.7\" 双曲面柔性屏 / 3D曲面玻璃 / 骁龙 821 性能版 / 2256万超高像素相机 / 4070mAh 超长续航', '3999', '');
 INSERT INTO `xm_detail_format` VALUES ('3', '15', '/uploads/20170707\\610ef44cce2a9357e8dbb50d0635f61b.jpg', '', '', '', 'mi5', '“暗夜之眼”超感光相机 / 无孔式超声波指纹识别 / 骁龙 821 旗舰处理器 / 全金属一体化机身', '1800', null);
 INSERT INTO `xm_detail_format` VALUES ('4', '16', '/uploads/20170707\\7ead9a668158f6ece536b4956b94d512.jpg', '', '', '', '红米4X', '4100mAh 超长续航 / 5\'\'舒适单手握感 / 骁龙 8 核处理器', '899', null);
 INSERT INTO `xm_detail_format` VALUES ('5', '19', '/uploads/20170707\\75d014e26914e4ca401b010cbd8d67c5.png', '', '', '', '纳米电视4', '4.9mm 极超薄机身 / 无边框式设计 / 3GB+32GB超大内存', '9999', null);

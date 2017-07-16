@@ -32,7 +32,15 @@
            ?>
            
                     <div class="right">
-                        <a href="__PUBLIC__pc/order/cart">
+                    <?php
+                        if(empty($user_id)){
+                            echo '<a href="">';
+                        }else {
+                            echo '<a href="__PUBLIC__pc/order/cart">';
+                        }
+                        
+                    ?>
+                        
                     <i class="iconfont">&#xe626;</i>购物车<span>(
                     <?php
                         if(empty($user_id)){
