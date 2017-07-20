@@ -1,0 +1,2 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:95:"D:\wamp64\www\webPrj\vue-prj\my-project\src\api\public/../application/admin\view\test\show.html";i:1496203622;}*/ ?>
+<h1><?php echo $sayhello; ?></h1>

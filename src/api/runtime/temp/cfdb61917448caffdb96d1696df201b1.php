@@ -1,0 +1,242 @@
+<?php if (!defined('THINK_PATH')) exit(); /*a:1:{s:79:"D:\wamp64\www\nami\src\api\public/../application/pc\view\personal\register.html";i:1499959285;}*/ ?>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>注册</title>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__static/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__static/css/register.css">
+    <script type="text/javascript" src="__PUBLIC__static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__static/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div class="re-wrapper">
+        <div class="wrap">
+            <div class="wrap-cont">
+                <div class="logo">
+                	<a href="__PUBLIC__pc/index/index">
+                		<img src="__PUBLIC__static/images/milogo.png"></div>	
+                	</a>
+                    
+                <div class="title">
+                    <h2>纳米账号注册</h4>
+				</div>
+				<form class="form" method="post" onsubmit="return checkForm()">
+					<div class="list">
+
+						<div class="form-group">
+						    <input require type="text" class="form-control" name="user_name" placeholder="请输入手机号码">
+						</div>
+						<div class="form-group">
+						    <input type="password" class="form-control" name="psw" placeholder="请输入密码">
+						</div>
+						<div class="form-group">
+						    <input type="password" class="form-control" name="rePsw" placeholder="请再次密码">
+						</div>
+	
+						<div class="form-group">
+        					
+        					<input  type="text" name="user_captcha" class="form-control" placeholder="	请输入验证码">
+        					<img  class="captcha" src="<?php echo captcha_src(); ?>" alt="" onclick="this.src='	<?php echo captcha_src(); ?>'">
+    					</div>
+						<div class="form-group">
+							<div id="regAlert" class="alert hide alert-danger">
+            					<!--data-dismiss="alert"声明式触发 -->
+            					<a class="close" >x</a>
+            					<strong></strong>
+            				</div>
+            			
+							<button type="submit" class="btn btn-default">立即注册</button>
+						</div>
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+</div>
+<div class="re-footer">
+	<div class="lang">
+		<ul class="list">
+			<li><a>简体</a></li>
+			<li><a>繁体</a></li>
+			<li><a>English</a></li>
+			<li><a>常见问题</a></li>
+		</ul>
+	</div>
+	<p class="nf-intro">
+		<span>
+			纳米公司版权所有-京ICP备10046444-
+			<a class="beianlink beian-record-link" target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802020134">
+				<span>
+					<img src="https://account.xiaomi.com/static/res/9204d06/account-static/respassport/acc-2014/img/ghs.png"></span>
+				京公网安备11010802020134号
+			</a>
+			-京ICP证110507号
+		</span>
+	</p>
+</div>
+
+
+<script>
+ var $user_name =$('input[name="user_name"]');
+	var user_val = $('input[name="user_name"]').val();
+	function checkForm(){
+		user_val = $('input[name="user_name"]').val();
+		var user_psw = $('input[name="psw"]').val();
+		var user_rePsw = $('input[name="rePsw"]').val();
+		var user_captcha = $('input[name="user_captcha"]').val();
+		
+		//在输入完手机号时 验证
+		checkMobile(user_val);
+
+		// 失去焦点
+		//checkPsw(user_psw);
+		//checkRePsw(user_rePsw,user_psw);
+		//验证密码
+		
+		if(user_psw.length < 6 || user_psw.length > 18){
+            showAlert('密码长度必须是6到18位！','#regAlert');
+
+            return false;
+        }else if( user_psw != user_rePsw){
+            showAlert('两个密码不一样！','#regAlert');
+
+            return false;
+        }else if( user_captcha ==''){
+
+           showAlert('验证码不能为空','#regAlert');
+           return false;
+        }else if( user_captcha !=''){
+        	
+            checkUser();
+            $.getJSON('__PUBLIC__pc/personal/regAjax.html?callback=?',{captcha:user_captcha,user_val,user_psw},function  (rtnD) {
+				if (rtnD.status == 0) {
+                	showAlert(rtnD.msg,'#regAlert');
+                	return false;
+           	 	}
+           	 	console.log('成功！！！');
+            	window.location.href="__PUBLIC__pc/personal/login";         
+            	
+        	})
+		return false;
+
+        }else{
+            return true;
+        }
+
+	}
+
+	//显示弹框
+	function showAlert(msg,ele){
+		$(ele).removeClass('hide').find('strong').html(msg);
+		setTimeout('hideAlert("#regAlert")', 3000);
+		//console.log('111');
+	}
+	//隐藏弹框
+	function hideAlert(ele){
+		$(ele).addClass('hide');
+	}
+
+	//检查手机的格式以及长度
+	function checkMobile (mobile){
+		if (!/^1\d{10,13}/.test(mobile)) {
+			showAlert('手机号码格式不正确！',"#regAlert");
+			$user_name.focus();			
+		}
+	}
+
+	//检查密码  --正则表达式
+	function checkPsw (psw){
+		if (!/^1\d{6}/.test(psw)) {
+			showAlert('请输入6-18为字符！',"#regAlert");
+			//$userepsw.focus();
+			//return false;
+		}
+	}
+
+	//检查密码是否一致
+	function checkRePsw (rePsd,psd) {
+		if( rePsd != psd){
+            showAlert('请确认密码是否一致','#regAlert');
+        }
+	}
+
+	function checkUser(){
+		var user_val = $user_name.val();
+
+		 
+		//提供api接口 传递参数  需要 callback?  需要找到api 所在的地方即时接口
+		//接口：__PUBLIC__pc/personal/regAjax.html?callback=?'
+		$.getJSON('__PUBLIC__pc/personal/checkName.html?callback=?',{user_name:user_val},function (rtnD) {
+			if (rtnD.status == 0) {
+				showAlert(rtnD.msg,"#regAlert");
+				return false;
+			}
+		})
+	}
+
+
+	$(function(){
+		$('.alert .close').click(function(){			
+			hideAlert("#regAlert");
+		})		
+
+		//失去焦点时 验证用户输入的值是否正确 
+		// 验证是否已存在用户名 即时验证---ajax--数据表
+		/*$user_name.blur();
+		checkUser();*/
+		$user_name.blur(function (){
+			let user_val = $(this).val();
+			$.ajaxSettings.async = false;
+			checkMobile(user_val);
+			//提供api接口 传递参数  需要 callback?  需要找到api 所在的地方即时接口
+			//接口：__PUBLIC__pc/personal/regAjax.html?callback=?'
+			$.getJSON('__PUBLIC__pc/personal/checkName.html?callback=?',{user_name:user_val},function (rtnD) {
+				if (rtnD.status == 0) {
+					showAlert(rtnD.msg,"#regAlert");
+				}
+
+			})
+			$.ajaxSettings.async = true;
+		})
+		
+	})
+
+
+</script>
+</body>
+</html>
+
+<!-- $.ajaxSettings.async = true;
+$.getJSON(){
+	
+}
+$.ajaxSettings.async = false;
+
+
+$.ajax(){
+	type:"post",
+	url,
+	async:
+	dataType:
+	data:{
+	"method":"isExisInfoTitle","intInfoID":$("#intINfoID")/val()}<
+	success:function(data){
+		if(data.result ==="falste")
+
+	}
+	}
+}
+url
+type
+timeout
+async
+cache
+data
+dateType
+
+ -->
